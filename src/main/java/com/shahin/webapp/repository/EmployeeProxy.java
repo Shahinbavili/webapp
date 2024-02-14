@@ -18,14 +18,17 @@ public class EmployeeProxy {
     private CustomProperties props;
 
     /**
-     * Create an employee
+     * Add a new employee
+     *
+     * @param e A new employee (without an id)
+     * @return The employee fulfilled (with an id)
      */
     public Employee createEmployee(Employee e) {
         String baseApiUrl = props.getApiUrl();
         String createEmployeeUrl = baseApiUrl + "/employee";
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Employee> request = new HttpEntity<Employee>(e);
+        HttpEntity<Employee> request = new HttpEntity<>(e);
         ResponseEntity<Employee> response = restTemplate.exchange(
                 createEmployeeUrl,
                 HttpMethod.POST,
@@ -57,5 +60,72 @@ public class EmployeeProxy {
         log.debug("Get Employees call " + response.getStatusCode());
 
         return response.getBody();
+    }
+
+    /**
+     * Get an employee by the id
+     *
+     * @param id The id of the employee
+     * @return The employee which matches the id
+     */
+    public Employee getEmployee(int id) {
+        String baseApiUrl = props.getApiUrl();
+        String getEmployeeUrl = baseApiUrl + "/employee" + id;
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Employee> response = restTemplate.exchange(
+                getEmployeeUrl,
+                HttpMethod.GET,
+                null,
+                Employee.class
+        );
+
+        log.debug("Get Employee call " + response.getStatusCode());
+
+        return response.getBody();
+    }
+
+    /**
+     * Update an employee - using the PUT HTTP Method.
+     *
+     * @param e Existing employee to update
+     */
+    public Employee updateEmployee(Employee e) {
+        String baseApiUrl = props.getApiUrl();
+        String updateEmployeeUrl = baseApiUrl + "/employee" + e.getId();
+
+        final RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Employee> request = new HttpEntity<>(e);
+        ResponseEntity<Employee> response = restTemplate.exchange(
+                updateEmployeeUrl,
+                HttpMethod.PUT,
+                request,
+                Employee.class
+        );
+
+        log.debug("Update Employee call " + response.getStatusCode());
+
+        return response.getBody();
+    }
+
+    /**
+     * Delete an employee using exchange method of RestTemplate
+     * instead of delete method in order to log the response status code.
+     *
+     * @param id The employee to delete
+     */
+    public void deleteEmployee(int id) {
+        String baseApiUrl = props.getApiUrl();
+        String deleteEmployeeUrl = baseApiUrl + "/employee/" + id;
+
+        final RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Void> response = restTemplate.exchange(
+                deleteEmployeeUrl,
+                HttpMethod.DELETE,
+                null,
+                Void.class
+        );
+
+        log.debug("Delete Employee call " + response.getStatusCode());
     }
 }
