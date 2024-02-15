@@ -70,7 +70,7 @@ public class EmployeeProxy {
      */
     public Employee getEmployee(int id) {
         String baseApiUrl = props.getApiUrl();
-        String getEmployeeUrl = baseApiUrl + "/employee" + id;
+        String getEmployeeUrl = baseApiUrl + "/employee/" + id;
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Employee> response = restTemplate.exchange(
@@ -92,7 +92,7 @@ public class EmployeeProxy {
      */
     public Employee updateEmployee(Employee e) {
         String baseApiUrl = props.getApiUrl();
-        String updateEmployeeUrl = baseApiUrl + "/employee" + e.getId();
+        String updateEmployeeUrl = baseApiUrl + "/employee/" + e.getId();
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Employee> request = new HttpEntity<>(e);
